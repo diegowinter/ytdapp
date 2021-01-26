@@ -1,0 +1,43 @@
+{
+  "name": "ytdapp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-native-community/art": "^1.2.0",
+    "react": "16.13.1",
+    "react-native": "0.63.4",
+    "react-native-animated-linear-gradient": "^1.2.2",
+    "react-native-background-downloader": "^2.3.4",
+    "react-native-download-button": "^1.0.0",
+    "react-native-elements": "^3.1.0",
+    "react-native-fs": "^1.2.0",
+    "react-native-linear-gradient": "^2.5.6",
+    "react-native-progress": "^4.1.2",
+    "react-native-text-ticker": "^1.11.0",
+    "react-native-vector-icons": "^8.0.0",
+    "react-native-ytdl": "^4.2.1",
+    "rn-fetch-blob": "^0.11.2",
+    "rn-swipeable-panel": "^1.2.5",
+    "ytdl-core": "^4.4.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/runtime": "^7.8.4",
+    "@react-native-community/eslint-config": "^1.1.0",
+    "babel-jest": "^25.1.0",
+    "eslint": "^6.5.1",
+    "jest": "^25.1.0",
+    "metro-react-native-babel-preset": "^0.59.0",
+    "react-test-renderer": "16.13.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
