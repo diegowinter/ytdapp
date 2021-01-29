@@ -26,7 +26,6 @@ const App = () => {
     openLarge: false,
     showCloseButton: false,
     closeOnTouchOutside: true,
-    onlyLarge: true,
     onClose: () => closePanel(),
     onPressCloseButton: () => closePanel()
   });
@@ -45,15 +44,30 @@ const App = () => {
     const result = ytdl.validateURL(text);
     if(result) {
       const response = await ytdl.getInfo(text);
-      const formatList = response.formats;
-      let simpleFormats = [];
-      formatList.forEach((format, index) => {
-        simpleFormats.push({
-          id: index + 1,
-          container: format.container,
-          height: format.height,
-          url: format.url
-        })
+      const result = Object.values(response.formats.reduce((a, curr) => {
+        (a[curr.height] = a[curr.height] || []).push(curr);
+        return a;
+      },{}));
+      let filteredResults = [];
+      result.forEach(chunk => {
+        let selectedFormat = chunk.find(element => element.container === 'mp4' &&
+          element.hasVideo === true && element.hasAudio === true);
+        if (selectedFormat != undefined) {
+          filteredResults.push({ ...selectedFormat });
+        } else {
+          selectedFormat = chunk.find(element => element.container === 'mp4' &&
+            element.hasVideo === true);
+          if (selectedFormat != undefined) {
+            filteredResults.push({ ...selectedFormat });
+          } else {
+            selectedFormat = chunk.find(element => element.hasVideo === true);
+            if (selectedFormat != undefined) {
+              filteredResults.push({ ...selectedFormat });
+            } else {
+              filteredResults.push(...chunk);
+            }
+          }
+        }
       });
       setVideoInfo({
         title: response.videoDetails.title,
@@ -61,10 +75,13 @@ const App = () => {
         length: response.videoDetails.lengthSeconds,
         thumbnail: response.videoDetails.thumbnails[response.videoDetails.thumbnails.length - 1].url
       })
-      setFormats(simpleFormats);
+      setFormats(filteredResults);
+      setIsLoadingVideo(false);
+      openPanel();
+    } else {
+      ToastAndroid.show('Algo deu errado. O link está correto?', ToastAndroid.SHORT);
+      setIsLoadingVideo(false);
     }
-    setIsLoadingVideo(false);
-    openPanel();
   }
 
   const openPanel = () => {
@@ -112,10 +129,6 @@ const App = () => {
     setIsDownloadComplete(false);
     setProgress(0);
   }
-
-  // useEffect(() => {
-  //   console.log('opa');
-  // }, [isLoadingVideo]);
 
   return (
     <AnimatedLinearGradient customColors={['#c70000', '#940000', '#660000', '#380000']}
